@@ -38,22 +38,28 @@ def load_rails_and_run
   AsyncObserver::Worker.new(binding).run()
 end
 
-# check rails env
-if ARGV.include?('-e')
+# set environment
+if ARGV.include?('-e') # check rails env
   env=nil
   ARGV.each_with_index{|arg,i| env = ARGV[i+1] if arg == '-e' }
   RAILS_ENV=env unless env.nil?
 end
 
-# check daemonize
 if ARGV.include?('-d')
   pidpath = 'log/worker.pid'
-  if ARGV.include?('--pid')
-    # look up the pid path
+  if ARGV.include?('--pid') # look up the pid path
     ARGV.each_with_index{|arg,i| pidpath = ARGV[i+1] if arg == '--pid' }
     STDERR.puts "Missing pid file path!" and exit(1) if pidpath.nil?
   end
-  STDERR.puts "#{pidpath} not writable!" and exit(1) unless File.writable?(pidpath)
+  unless File.writable?(File.dirname(pidpath))
+    STDERR.puts "#{pidpath} not writable!"
+    exit(1)
+  end
+
+  if File.exist?(pidpath)
+    STDERR.puts "#{pidpath} exits! Make sure the worker isn't still running and try again after rm #{pidpath}"
+    exit(1)
+  end
 
   require File.dirname(__FILE__) + '/../lib/async_observer/daemonize'
   AsyncObserver::Daemonize.detach(pidpath) do
