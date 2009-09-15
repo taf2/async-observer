@@ -5,3 +5,12 @@ For more information, see http://async-observer.rubyforge.org/.
 
 For more information on Beanstalk, see its home page at
 http://xph.us/software/beanstalkd/.
+
+
+Worker Options:
+-d                                : daemonize
+--pid [path to pidfile]           : drop a pid file to a path
+-e [test,production,development]  : set the rails environment
+
+Example Usage:
+./vendor/plugins/async_observer/bin/worker -d --pid /home/taf2/work/app/log/worker.pid -e production
