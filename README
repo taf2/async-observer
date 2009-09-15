@@ -13,4 +13,15 @@ Worker Options:
 -e [test,production,development]  : set the rails environment
 
 Example Usage:
-./vendor/plugins/async_observer/bin/worker -d --pid /home/taf2/work/app/log/worker.pid -e production
+
+start 3 workers
+  ./vendor/plugins/async_observer/bin/worker -d --pid log/worker1.pid -e production
+  ./vendor/plugins/async_observer/bin/worker -d --pid log/worker2.pid -e production
+  ./vendor/plugins/async_observer/bin/worker -d --pid log/worker3.pid -e production
+
+kill one
+  kill -s INT `cat log/worker1.pid`
+
+Remember kill a worker will cause it to go into a shutdown phase.
+Run the above again to kill immediately, but remember all jobs in
+the workers queue is lost at that point...
