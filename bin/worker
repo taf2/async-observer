@@ -38,8 +38,15 @@ def load_rails_and_run
   AsyncObserver::Worker.new(binding).run()
 end
 
+# check rails env
+if ARGV.include?('-e')
+  env=nil
+  ARGV.each_with_index{|arg,i| env = ARGV[i+1] if arg == '-e' }
+  RAILS_ENV=env unless env.nil?
+end
+
+# check daemonize
 if ARGV.include?('-d')
-  puts ARGV.inspect
   pidpath = 'log/worker.pid'
   if ARGV.include?('--pid')
     # look up the pid path
