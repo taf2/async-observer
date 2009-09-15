@@ -23,6 +23,7 @@ class AsyncObserver::Daemonize
       fork do
         Process.setsid
         File.open(pidfile, 'wb') {|f| f << Process.pid}
+        at_exit { File.unlink(pidfile) }
         File.umask 0000
         STDIN.reopen "/dev/null"
         STDOUT.reopen "/dev/null", "a"
