@@ -86,7 +86,7 @@ class Range
   end
 end
 
-HOOKS = [:after_create, :after_update, :after_save]
+HOOKS = [:after_create, :after_update, :after_save, :after_destroy]
 
 class << ActiveRecord::Base
   HOOKS.each do |hook|
